@@ -32,6 +32,17 @@ namespace notes.WebApi
             services.AddDbContext<AppDbContext>();
 
             services.AddTransient<INoteServices, NotesServices>();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("NotesPolicy",
+                builder =>
+                {
+                    builder.WithOrigins("*")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +56,8 @@ namespace notes.WebApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("NotesPolicy");
 
             app.UseAuthorization();
 
